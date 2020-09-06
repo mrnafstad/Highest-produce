@@ -1,58 +1,67 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+  <v-container fluid class="text-center">
+    <v-row align="center" justify="center">
+      <v-col v-for="(num, idx) in numbers" :key="idx">
+        <v-btn color="secondary" @click="remove(idx)">{{ num }}</v-btn>
+      </v-col>
+    </v-row>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="6" md="3">
+        <v-list>
+          <v-text-field type="number" v-model="toAdd" label="Regular"></v-text-field>
+          <v-list-item>
+            <v-btn @click="addNumber" color="success">Add to list</v-btn>
+            <v-spacer />
+            <v-btn @click="getHighest" color="info">Produce</v-btn>
+          </v-list-item>
+        </v-list>
+      </v-col>
+    </v-row>
+    <v-row v-if="highestProduce" justify="center">
+      <v-col>The highest product:</v-col>
+      <v-col>{{ highestProduce }}</v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
-</script>
+  name: "HelloWorld",
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
+  data() {
+    return {
+      numbers: [1, 5, 6, -2, -11],
+      toAdd: null,
+      highestProduce: null,
+    };
+  },
+  methods: {
+    getHighest() {
+      //assuming only positive integers. Find more general solution
+      //this.highestProduce =
+      //this.maxValues[0] * this.maxValues[1] * this.maxValues[2];
+      var max = this.numbers[0] * this.numbers[1] * this.numbers[2];
+      const numNeg = this.numbers.filter((v) => v < 0);
+      console.log(numNeg);
+      if (numNeg.length < 2) {
+        this.highestProduce = max;
+      } else {
+        max =
+          this.numbers[0] *
+          this.numbers[this.numbers.length - 1] *
+          this.numbers[this.numbers.length - 2];
+        this.highestProduce = max;
+      }
+    },
+    addNumber() {
+      this.numbers.push(this.toAdd);
+      this.numbers.sort((a, b) => {
+        return b - a;
+      });
+    },
+    remove(index) {
+      this.numbers.splice(index, 1);
+    },
+  },
+};
+</script>
