@@ -13,6 +13,8 @@
             <v-btn @click="addNumber" color="success">Add to list</v-btn>
             <v-spacer />
             <v-btn @click="getHighest" color="info">Produce</v-btn>
+            <v-spacer />
+            <v-btn @click="clearList" color="danger">Clear</v-btn>
           </v-list-item>
         </v-list>
       </v-col>
@@ -37,30 +39,38 @@ export default {
   },
   methods: {
     getHighest() {
-      //assuming only positive integers. Find more general solution
-      //this.highestProduce =
-      //this.maxValues[0] * this.maxValues[1] * this.maxValues[2];
+      //assuming only positive integers.
+      //Sorter først
+      this.numbers.sort((a, b) => {
+        return b - a;
+      });
       var max = this.numbers[0] * this.numbers[1] * this.numbers[2];
+      console.log("max: " + max);
       const numNeg = this.numbers.filter((v) => v < 0);
-      console.log(numNeg);
+      console.log("Number of negative values: " + numNeg.length);
       if (numNeg.length < 2) {
         this.highestProduce = max;
       } else {
-        max =
+        const max2 =
           this.numbers[0] *
           this.numbers[this.numbers.length - 1] *
           this.numbers[this.numbers.length - 2];
-        this.highestProduce = max;
+        console.log("Max2: " + max2);
+        if (max2 > max) {
+          this.highestProduce = max2;
+        } else {
+          this.highestProduce = max;
+        }
       }
     },
     addNumber() {
       this.numbers.push(this.toAdd);
-      this.numbers.sort((a, b) => {
-        return b - a;
-      });
     },
     remove(index) {
       this.numbers.splice(index, 1);
+    },
+    clearList() {
+      this.numbers = [];
     },
   },
 };
